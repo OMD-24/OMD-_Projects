@@ -92,7 +92,7 @@ public class Auction {
 
         System.out.println("Initial purse: " + Arrays.toString(t.getPurse()));
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 20; i++) {
             Player player = p.playerList.get(i);
 //            Integer Price = p.BasePrice.get(i);
             bidding(player, t);
@@ -209,18 +209,25 @@ class Players {
         playerList.add(new Player("Rohit Sharma", 180, 34, "Batsman", 300, 7200, 135.8, 2, 0.0, 70));
         playerList.add(new Player("Jasprit Bumrah", 150, 28, "Bowler", 150, 250, 145.6, 200, 6.8, 30));
         playerList.add(new Player("KL Rahul", 140, 31, "Batsman/Wicket-Keeper", 150, 4800, 140.2, 3, 0.0, 40));
-        playerList.add(new Player("Rashid Khan", 120, 26, "Bowler", 100, 1000, 125.5, 180, 6.0, 35));
-        playerList.add(new Player("Hardik Pandya", 150, 28, "All-Rounder", 120, 2200, 145.0, 50, 7.0, 45));
-        playerList.add(new Player("Ben Stokes", 100, 30, "All-Rounder", 110, 2800, 138.9, 40, 7.8, 55));
-        playerList.add(new Player("David Warner", 120, 35, "Batsman", 180, 6000, 140.1, 1, 0.0, 65));
-        playerList.add(new Player("Shubman Gill", 100, 23, "Batsman", 80, 2200, 128.4, 0, 0.0, 25));
         playerList.add(new Player("Suryakumar Yadav", 150, 30, "Batsman", 120, 3600, 155.7, 1, 0.0, 50));
-        playerList.add(new Player("Trent Boult", 120, 33, "Bowler", 130, 150, 140.3, 170, 7.2, 40));
+        playerList.add(new Player("Hardik Pandya", 150, 28, "All-Rounder", 120, 2200, 145.0, 50, 7.0, 45));
+        playerList.add(new Player("Shubman Gill", 100, 23, "Batsman", 80, 2200, 128.4, 0, 0.0, 25));
+        playerList.add(new Player("Rishabh Pant", 110, 26, "Wicket-Keeper", 100, 2900, 145.0, 2, 0.0, 30));
+        playerList.add(new Player("Bhuvneshwar Kumar", 160, 33, "Bowler", 130, 300, 120.0, 180, 6.5, 40));
+        playerList.add(new Player("Ravindra Jadeja", 190, 34, "All-Rounder", 170, 2500, 130.5, 120, 6.7, 55));
+        playerList.add(new Player("Yuzvendra Chahal", 130, 33, "Bowler", 100, 200, 100.0, 160, 7.5, 30));
+        playerList.add(new Player("Kuldeep Yadav", 110, 30, "Bowler", 80, 150, 110.0, 140, 7.2, 25));
+        playerList.add(new Player("Sanju Samson", 130, 29, "Wicket-Keeper", 120, 3100, 135.5, 1, 0.0, 35));
+        playerList.add(new Player("Abhishek Sharma", 60, 23, "All-Rounder", 70, 1500, 140.0, 20, 7.1, 20));
+        playerList.add(new Player("Axar Patel", 100, 31, "All-Rounder", 90, 1400, 125.0, 80, 6.4, 28));
+        playerList.add(new Player("Shreyas Iyer", 120, 29, "Batsman", 110, 3200, 132.0, 0, 0.0, 30));
+        playerList.add(new Player("Mohammed Shami", 140, 33, "Bowler", 120, 100, 120.0, 150, 7.0, 35));
+        playerList.add(new Player("Mohammed Siraj", 90, 29, "Bowler", 80, 70, 125.0, 100, 7.3, 20));
+        playerList.add(new Player("Ishan Kishan", 100, 26, "Wicket-Keeper", 90, 2400, 145.0, 1, 0.0, 25));
 
         Collections.shuffle(playerList);
-
-
     }
+
 
 
 
