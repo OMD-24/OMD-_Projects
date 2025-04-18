@@ -1,14 +1,30 @@
 package IPL_Auction;
 
+import javax.swing.*;
+import java.awt.*;
+
+
 import java.util.*;
+import java.util.List;
 
 public class Auction {
-    public static void bidding(Player player, Teams t) {
+    static PlayerImageWindow imageWindow = new PlayerImageWindow();
+    public static void bidding(Player player, Teams t, Calculate cal) {
+
+
+
+//    PlayerImageWindow imageWindow = new PlayerImageWindow(); // Create the image window
+        imageWindow.showPlayerImage(player.name); // Show current player's image
+
+
+
         Scanner sc = new Scanner(System.in);
         int currPrice = player.basePrice;
         int bid;
         int index = -1;
         int[] budget = {0,0,0,0};
+
+
 
         String winningTeam = "Unsold";
 
@@ -31,6 +47,7 @@ public class Auction {
                 System.out.println(player.name + " is sold to " + winningTeam + " for Rs. " + currPrice);
                 if (index != -1) {
                     t.setPurse(index, budget[index]);
+                    cal.TeamPoints(index + 1, player.points);
                 }
                 t.TeamSquad(index + 1, player.name, currPrice);
                 int[] printMoney=t.getPurse();
@@ -76,11 +93,17 @@ public class Auction {
 
             index = teamIndex; // Store last bidder index
         }
+        imageWindow.setVisible(true); // Optional
+
     }
 
     public static void main(String[] args) {
         Teams t = new Teams();
         Players p = new Players();
+        Calculate cal = new Calculate();
+
+//        PlayerImageWindow imageWindow = new PlayerImageWindow(); // Show window early
+        imageWindow.showPlayerImage("default"); // Show default image first
 
         System.out.println("Enter an initial purse amount for each team: ");
         Scanner sc = new Scanner(System.in);
@@ -92,14 +115,68 @@ public class Auction {
 
         System.out.println("Initial purse: " + Arrays.toString(t.getPurse()));
 
+
+
+        // Starting instructions
+        System.out.println("\n=== Welcome to the 'APL Auction 2025' ===");
+        System.out.println("Instructions:");
+        System.out.println("- Press team number (1: MI, 2: CSK, 3: RCB, 4: KKR) to bid.");
+        System.out.println("- Press 0 to stop bidding for the current player.");
+        System.out.println("- Press 5 to view current squads.\n");
+        System.out.println("1. Press 1 to START the auction.");
+        System.out.println("2. Press 2 to SEE the list of players coming up in the auction.");
+        System.out.print("Enter your choice: ");
+
+        int choice = sc.nextInt();
+
+        if (choice == 2) {
+            System.out.println("\nList of Players in the Auction:");
+            for (Player pr : p.playerList) {
+                System.out.println(pr.name + " - ₹" + pr.basePrice + " Lakhs");
+            }
+
+            // Shuffle player list
+            Collections.shuffle(p.playerList);
+            System.out.print("\nNow press 1 to start the auction: ");
+            choice = sc.nextInt();
+        }
+
+        while (choice != 1) {
+            System.out.print("Invalid choice. Please enter 1 to start the auction: ");
+            choice = sc.nextInt();
+        }
+
         for (int i = 0; i < 20; i++) {
             Player player = p.playerList.get(i);
-//            Integer Price = p.BasePrice.get(i);
-            bidding(player, t);
+
+            bidding(player, t, cal);
         }
 
         for(int i=0; i<=4; i++){
             t.printSquad(i);
+        }
+
+
+
+        double Arr[] = new double[4];
+
+        Arr[0]= cal.getTotalPoints(cal.MIpoints);
+        Arr[1]= cal.getTotalPoints(cal.CSKpoints);
+        Arr[2]= cal.getTotalPoints(cal.RCBpoints);
+        Arr[3]= cal.getTotalPoints(cal.KKRpoints);
+
+
+        System.out.println("Do you want to know the analysis of each Team,\nmeans which Team has perfomed well in this Auction\n" +
+                "type '8' YES  or  '9' for NO");
+        int input = sc.nextInt();
+        if(input==8){
+            System.out.println("MI -> "+ cal.getTotalPoints(cal.MIpoints));
+            System.out.println("CSK -> "+ cal.getTotalPoints(cal.CSKpoints));
+            System.out.println("RCB -> "+ cal.getTotalPoints(cal.RCBpoints));
+            System.out.println("KKR -> "+ cal.getTotalPoints(cal.KKRpoints));
+        } else if (input==9) {
+            return;
+
         }
     }
 }
@@ -160,9 +237,10 @@ class Player {
     int wickets;
     double bowlingEconomy;
     int catches;
+    double points;
 
     // Constructor
-    public Player(String name, int basePrice, int age, String role, int matches, int runs, double strikeRate, int wickets, double bowlingEconomy, int catches) {
+    public Player(String name, int basePrice, int age, String role, int matches, int runs, double strikeRate, int wickets, double bowlingEconomy, int catches,double points) {
         this.name = name;
         this.basePrice = basePrice;
         this.age = age;
@@ -173,6 +251,7 @@ class Player {
         this.wickets = wickets;
         this.bowlingEconomy = bowlingEconomy;
         this.catches = catches;
+        this.points = points;
     }
 
 
@@ -204,31 +283,29 @@ class Players {
 
     public Players() {
         // Adding players with stats
-        playerList.add(new Player("Virat Kohli", 200, 32, "Batsman", 250, 7500, 130.5, 5, 0.0, 50));
-        playerList.add(new Player("MS Dhoni", 180, 39, "Wicket-Keeper", 350, 5000, 125.3, 10, 0.0, 100));
-        playerList.add(new Player("Rohit Sharma", 180, 34, "Batsman", 300, 7200, 135.8, 2, 0.0, 70));
-        playerList.add(new Player("Jasprit Bumrah", 150, 28, "Bowler", 150, 250, 145.6, 200, 6.8, 30));
-        playerList.add(new Player("KL Rahul", 140, 31, "Batsman/Wicket-Keeper", 150, 4800, 140.2, 3, 0.0, 40));
-        playerList.add(new Player("Suryakumar Yadav", 150, 30, "Batsman", 120, 3600, 155.7, 1, 0.0, 50));
-        playerList.add(new Player("Hardik Pandya", 150, 28, "All-Rounder", 120, 2200, 145.0, 50, 7.0, 45));
-        playerList.add(new Player("Shubman Gill", 100, 23, "Batsman", 80, 2200, 128.4, 0, 0.0, 25));
-        playerList.add(new Player("Rishabh Pant", 110, 26, "Wicket-Keeper", 100, 2900, 145.0, 2, 0.0, 30));
-        playerList.add(new Player("Bhuvneshwar Kumar", 160, 33, "Bowler", 130, 300, 120.0, 180, 6.5, 40));
-        playerList.add(new Player("Ravindra Jadeja", 190, 34, "All-Rounder", 170, 2500, 130.5, 120, 6.7, 55));
-        playerList.add(new Player("Yuzvendra Chahal", 130, 33, "Bowler", 100, 200, 100.0, 160, 7.5, 30));
-        playerList.add(new Player("Kuldeep Yadav", 110, 30, "Bowler", 80, 150, 110.0, 140, 7.2, 25));
-        playerList.add(new Player("Sanju Samson", 130, 29, "Wicket-Keeper", 120, 3100, 135.5, 1, 0.0, 35));
-        playerList.add(new Player("Abhishek Sharma", 60, 23, "All-Rounder", 70, 1500, 140.0, 20, 7.1, 20));
-        playerList.add(new Player("Axar Patel", 100, 31, "All-Rounder", 90, 1400, 125.0, 80, 6.4, 28));
-        playerList.add(new Player("Shreyas Iyer", 120, 29, "Batsman", 110, 3200, 132.0, 0, 0.0, 30));
-        playerList.add(new Player("Mohammed Shami", 140, 33, "Bowler", 120, 100, 120.0, 150, 7.0, 35));
-        playerList.add(new Player("Mohammed Siraj", 90, 29, "Bowler", 80, 70, 125.0, 100, 7.3, 20));
-        playerList.add(new Player("Ishan Kishan", 100, 26, "Wicket-Keeper", 90, 2400, 145.0, 1, 0.0, 25));
+        playerList.add(new Player("Virat Kohli", 200, 32, "Batsman", 250, 7500, 130.5, 5, 0.0, 50,9.9));
+        playerList.add(new Player("MS Dhoni", 180, 39, "Wicket-Keeper", 350, 5000, 125.3, 10, 0.0, 100,9.8));
+        playerList.add(new Player("Rohit Sharma", 180, 34, "Batsman", 300, 7200, 135.8, 2, 0.0, 70,9.8));
+        playerList.add(new Player("Jasprit Bumrah", 150, 28, "Bowler", 150, 250, 145.6, 200, 6.8, 30,9.6));
+        playerList.add(new Player("KL Rahul", 140, 31, "Batsman/Wicket-Keeper", 150, 4800, 140.2, 3, 0.0, 40,9.0));
+        playerList.add(new Player("Suryakumar Yadav", 150, 30, "Batsman", 120, 3600, 155.7, 1, 0.0, 50,9.2));
+        playerList.add(new Player("Hardik Pandya", 150, 28, "All-Rounder", 120, 2200, 145.0, 50, 7.0, 45,9.0));
+        playerList.add(new Player("Shubman Gill", 100, 23, "Batsman", 80, 2200, 128.4, 0, 0.0, 25,8.5));
+        playerList.add(new Player("Rishabh Pant", 110, 26, "Wicket-Keeper", 100, 2900, 145.0, 2, 0.0, 30,8.8));
+        playerList.add(new Player("Bhuvneshwar Kumar", 160, 33, "Bowler", 130, 300, 120.0, 180, 6.5, 40,8.7));
+        playerList.add(new Player("Ravindra Jadeja", 190, 34, "All-Rounder", 170, 2500, 130.5, 120, 6.7, 55,9.3));
+        playerList.add(new Player("Yuzvendra Chahal", 130, 33, "Bowler", 100, 200, 100.0, 160, 7.5, 30,8.5));
+        playerList.add(new Player("Kuldeep Yadav", 110, 30, "Bowler", 80, 150, 110.0, 140, 7.2, 25,8.2));
+        playerList.add(new Player("Sanju Samson", 130, 29, "Wicket-Keeper", 120, 3100, 135.5, 1, 0.0, 35,8.6));
+        playerList.add(new Player("Abhishek Sharma", 60, 23, "All-Rounder", 70, 1500, 140.0, 20, 7.1, 20,8));
+        playerList.add(new Player("Axar Patel", 100, 31, "All-Rounder", 90, 1400, 125.0, 80, 6.4, 28,8.4));
+        playerList.add(new Player("Shreyas Iyer", 120, 29, "Batsman", 110, 3200, 132.0, 0, 0.0, 30,8.6));
+        playerList.add(new Player("Mohammed Shami", 140, 33, "Bowler", 120, 100, 120.0, 150, 7.0, 35,8.8));
+        playerList.add(new Player("Mohammed Siraj", 90, 29, "Bowler", 80, 70, 125.0, 100, 7.3, 20,8.3));
+        playerList.add(new Player("Ishan Kishan", 100, 26, "Wicket-Keeper", 90, 2400, 145.0, 1, 0.0, 25,8.5));
 
-        Collections.shuffle(playerList);
+//        Collections.shuffle(playerList);
     }
-
-
 
 
     // Print all players with stats
@@ -244,3 +321,73 @@ class Players {
         return playerList.get(index);
     }
 }
+
+
+
+class PlayerImageWindow extends JFrame {
+    private JLabel imageLabel;
+
+    public PlayerImageWindow() {
+        setTitle("Player Image");
+        setSize(350, 400);
+        setLayout(new BorderLayout());
+
+        imageLabel = new JLabel();
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        add(imageLabel, BorderLayout.CENTER);
+
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+
+    public void showPlayerImage(String playerName) {
+        String formattedName = playerName.replace(" ", "_");
+        String imagePath = "images/" + formattedName + ".jpg"; // e.g., images/Virat_Kohli.jpg
+
+        ImageIcon icon = new ImageIcon(imagePath);
+        if (icon.getIconWidth() > 0) {
+            Image scaledImage = icon.getImage().getScaledInstance(300, 350, Image.SCALE_SMOOTH);
+            imageLabel.setIcon(new ImageIcon(scaledImage));
+            imageLabel.setText("");
+        } else {
+            // Load default image
+            ImageIcon defaultIcon = new ImageIcon("images/default.png");
+            if (defaultIcon.getIconWidth() > 0) {
+                Image scaledImage = defaultIcon.getImage().getScaledInstance(300, 350, Image.SCALE_SMOOTH);
+                imageLabel.setIcon(new ImageIcon(scaledImage));
+
+            } else {
+                imageLabel.setIcon(null);
+                imageLabel.setText("Default image missing!");
+            }
+        }
+    }
+}
+class Calculate {
+    ArrayList<Double> MIpoints = new ArrayList<>();
+    ArrayList<Double> CSKpoints = new ArrayList<>();
+    ArrayList<Double> RCBpoints = new ArrayList<>();
+    ArrayList<Double> KKRpoints = new ArrayList<>();
+
+
+    public void TeamPoints(int j, double points) {
+        switch (j) {
+            case 1 -> MIpoints.add(points);
+            case 2 -> CSKpoints.add(points);
+            case 3 -> RCBpoints.add(points);
+            case 4 -> KKRpoints.add(points);
+
+        }
+    }
+
+    public double getTotalPoints(ArrayList<Double> teamPoints) {
+        double total = 0;
+        for (double point : teamPoints) {
+            total += point;
+        }
+        return total;
+    }
+
+}
+
