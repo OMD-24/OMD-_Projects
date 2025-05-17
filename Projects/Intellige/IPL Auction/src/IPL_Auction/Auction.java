@@ -29,7 +29,7 @@ public class Auction {
         String winningTeam = "Unsold";
 
         System.out.println("\nNow bidding for '" + player.name +"'"+
-                "\n Base Price : '"+ (player.basePrice+100) +"'"+
+                "\n Base Price : '"+ (player.basePrice) +"'"+
                 "\n Age : "+player.age+
                 "\n Role : "+player.role+
                 "\n Matches : "+player.matches+
@@ -105,6 +105,7 @@ public class Auction {
 //        PlayerImageWindow imageWindow = new PlayerImageWindow(); // Show window early
         imageWindow.showPlayerImage("default"); // Show default image first
 
+        System.out.println("\n=== Welcome to the 'APL Auction 2025' ===");
         System.out.println("Enter an initial purse amount for each team: ");
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
@@ -118,11 +119,12 @@ public class Auction {
 
 
         // Starting instructions
-        System.out.println("\n=== Welcome to the 'APL Auction 2025' ===");
+
         System.out.println("Instructions:");
         System.out.println("- Press team number (1: MI, 2: CSK, 3: RCB, 4: KKR) to bid.");
         System.out.println("- Press 0 to stop bidding for the current player.");
         System.out.println("- Press 5 to view current squads.\n");
+        System.out.println("- Remember the bid will always be increased by ₹ 100 Lakhs.\n");
         System.out.println("1. Press 1 to START the auction.");
         System.out.println("2. Press 2 to SEE the list of players coming up in the auction.");
         System.out.print("Enter your choice: ");
@@ -137,7 +139,7 @@ public class Auction {
 
             // Shuffle player list
             Collections.shuffle(p.playerList);
-            System.out.print("\nNow press 1 to start the auction: ");
+            System.out.println("Now press 1 to start the auction: ");
             choice = sc.nextInt();
         }
 
@@ -283,7 +285,7 @@ class Players {
 
     public Players() {
         // Adding players with stats
-        playerList.add(new Player("Virat Kohli", 200, 32, "Batsman", 250, 7500, 130.5, 5, 0.0, 50,9.9));
+        playerList.add(new Player("Virat Kohli", 200, 36, "Batsman", 262, 8447, 132.32, 5, 8.8, 231,9.9));
         playerList.add(new Player("MS Dhoni", 180, 39, "Wicket-Keeper", 350, 5000, 125.3, 10, 0.0, 100,9.8));
         playerList.add(new Player("Rohit Sharma", 180, 34, "Batsman", 300, 7200, 135.8, 2, 0.0, 70,9.8));
         playerList.add(new Player("Jasprit Bumrah", 150, 28, "Bowler", 150, 250, 145.6, 200, 6.8, 30,9.6));
@@ -329,7 +331,7 @@ class PlayerImageWindow extends JFrame {
 
     public PlayerImageWindow() {
         setTitle("Player Image");
-        setSize(350, 400);
+        setSize(350, 450);
         setLayout(new BorderLayout());
 
         imageLabel = new JLabel();
